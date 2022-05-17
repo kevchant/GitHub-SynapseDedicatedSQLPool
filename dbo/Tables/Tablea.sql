@@ -1,0 +1,13 @@
+CREATE TABLE [dbo].[Tablea] (
+    [col1] INT NOT NULL,
+    [col2] VARCHAR (10) NULL
+)
+WITH (CLUSTERED COLUMNSTORE INDEX);
+
+
+GO
+
+
+
+GO
+
