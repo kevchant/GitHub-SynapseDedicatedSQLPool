@@ -6,7 +6,7 @@ It uses a YAML pipeline, which is also known as a workflow in GitHub. You can fi
 
 In order to use it with GitHub Actions in your own account you can either import or fork this repository into another GitHub repository.
 
-In order for the workflow to run the firewall settings for the logical SQL Server MUST allow Azure services and resources to access the server. Alternatively, add the Azure Login GitHub Action to this workflow https://github.com/marketplace/actions/azure-login.
+In order for the workflow to run the firewall settings for the logical SQL Server MUST allow Azure services and resources to access the server. Alternatively, use the Azure Login GitHub Action that is in this workflow https://github.com/marketplace/actions/azure-login.
 
 In addition, you MUST have two secrets specified if you are using the Key Vault YAML, any defaults in my repo are blank:
 
