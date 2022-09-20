@@ -2,6 +2,8 @@
 
 Example of a SQL Server Database Project that deploys to Azure Synapse Dedicated SQL Pool in GitHub. Based on a blog post I wrote called 'Create a dacpac for an Azure Synapse Analytics dedicated SQL Pool using GitHub Actions' ([https://bit.ly/3HQOfFp](https://bit.ly/3Pl2irk)).
 
+A brief overview is below. However, there is also a wiki for this repository (https://github.com/kevchant/AzureDevOps-SynapseServerlessSQLPool/wiki).
+
 It uses a YAML pipeline, which is also known as a workflow in GitHub. You can find this file in the /.github/workflows folder of the repository.
 
 In order to use it with GitHub Actions in your own account you can either import or fork this repository into another GitHub repository.
