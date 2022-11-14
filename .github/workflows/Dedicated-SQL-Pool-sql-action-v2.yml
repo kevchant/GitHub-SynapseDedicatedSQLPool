@@ -1,0 +1,74 @@
+name: Update Azure Synapse Analytics Dedicated SQL Pool using Key Vault
+
+# Sets the trigger to update when update is pushed to main branch
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+
+  # Job to build and publish the dacpac
+  build:
+    # Easier to use Github-hosted runner if updating in GitHub
+    # windows-2019 image works better at the moment
+    runs-on: self-hosted
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2.4.2
+      # Find msbuild
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+      # create dacpac using MSBUILD
+      - name: Build Database project
+        run: |
+          msbuild.exe SQLPool.sqlproj /p:Configuration=Release
+      # Publish artifact
+      - uses: actions/upload-artifact@v3.0.0
+        with:
+          name: SQLPool
+          path: ${{ github.workspace }}/bin/Release/ 
+
+  # Deploy dacpac job
+  DeployDacpac:
+    # Set the dependency for the build job
+    needs: build
+    # Easier to use Github-hosted runner if updating in GitHub
+    runs-on: self-hosted
+
+    # Steps to deploy the updates to dedicated SQL Pool
+    # To keep this example simple, the Firewall settings in the logical SQL Server allows access from Azure services and resources
+    # An alternative is to use the Azure Login GitHub Action https://github.com/marketplace/actions/azure-login
+    steps:
+      - name: download artifact containing dacpac
+        # Dowloads Data artifact to dacpac folder
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: SQLPool
+          
+      # Login using Azure credentials 
+      # Required to add a temporary firewall rule for the runner
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+ 
+      # This gets the connection string from your Key Vault called DedicatedEndPoint and
+      - uses: Azure/get-keyvault-secrets@v1
+        with: 
+          keyvault: '${{ secrets.AZURE_KEYVAULT }}'
+          secrets: 'DedicatedSQLPool-Connection-String'
+        id: myKeyVaultSecrets 
+ 
+      # Installs dacpac
+      # For this to work you have a secret specified, default in my repo are blank
+      # Another called AZURESQLDB_CONNECTION_STRING which contains connection string to your Azure SQL Database
+      - name: Dedicated SQL Pool Deploy
+        uses: Azure/sql-action@v2
+        with:
+          # The connection string, including authentication information, for the dedicated SQL Pool.
+          connection-string: '${{ steps.myKeyVaultSecrets.outputs.DedicatedSQLPool-Connection-String }}'
+          # Name of the dacpac file in the artifact
+          path: './SQLPool.dacpac'
+          action: 'publish'
