@@ -2,6 +2,8 @@
 
 Example of a SQL Server Database Project that deploys to Azure Synapse Dedicated SQL Pool in GitHub. Initially based on a blog post I wrote called 'Create a dacpac for an Azure Synapse Analytics dedicated SQL Pool using GitHub Actions' ([https://bit.ly/3HQOfFp](https://bit.ly/3Pl2irk)).
 
+In addition, I show how you can do this in the [January 2023 edition of the Azure Synapse Analytics and Microsoft MVP series](https://www.youtube.com/watch?v=Dcpd4Z783Zs).
+
 A brief overview is below. However, there is also a wiki for this repository (https://github.com/kevchant/AzureDevOps-SynapseServerlessSQLPool/wiki).
 
 It contains two separate YAML pipelines, which is also known as a workflows in GitHub. You can find these files in the /.github/workflows folder of the repository. One workflow uses v1 of sql-action and the other uses the newer v2 version.
